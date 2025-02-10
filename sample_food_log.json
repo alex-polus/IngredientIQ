@@ -1,0 +1,272 @@
+[
+  {
+    "date": "2025-01-03",
+    "meals": [
+      {
+        "type": "Breakfast",
+        "time": "7:30 AM",
+        "items": [
+          {"name": "Frosted Flakes cereal", "quantity": "2 cups"},
+          {"name": "Whole milk", "quantity": "1.5 cups"},
+          {"name": "Banana", "quantity": "1 medium"}
+        ]
+      },
+      {
+        "type": "Lunch",
+        "time": "12:15 PM",
+        "items": [
+          {"name": "McDonald's Big Mac", "quantity": "1 sandwich"},
+          {"name": "McDonald's Large French Fries", "quantity": "1 order"},
+          {"name": "Coca-Cola", "quantity": "32 fl oz"}
+        ]
+      },
+      {
+        "type": "Dinner",
+        "time": "6:45 PM",
+        "items": [
+          {"name": "Grilled chicken breast", "quantity": "6 oz"},
+          {"name": "White rice", "quantity": "2 cups"},
+          {"name": "Steamed broccoli", "quantity": "1 cup"},
+          {"name": "Ranch dressing", "quantity": "3 tbsp"}
+        ]
+      },
+      {
+        "type": "Snack",
+        "time": "10:30 PM",
+        "items": [
+          {"name": "Doritos Nacho Cheese", "quantity": "1 family size bag"},
+          {"name": "Mountain Dew", "quantity": "20 fl oz"}
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2025-01-04",
+    "meals": [
+      {
+        "type": "Breakfast",
+        "time": "Skipped",
+        "items": []
+      },
+      {
+        "type": "Lunch",
+        "time": "1:30 PM",
+        "items": [
+          {"name": "Subway Footlong Meatball Marinara", "quantity": "1 sandwich"},
+          {"name": "Lay's Classic Potato Chips", "quantity": "1 bag"},
+          {"name": "Diet Coke", "quantity": "16 fl oz"}
+        ]
+      },
+      {
+        "type": "Dinner",
+        "time": "7:15 PM",
+        "items": [
+          {"name": "Frozen DiGiorno Supreme Pizza", "quantity": "1 whole pizza"},
+          {"name": "Ranch dressing for dipping", "quantity": "4 tbsp"}
+        ]
+      },
+      {
+        "type": "Snack",
+        "time": "11:00 PM",
+        "items": [
+          {"name": "Oreo Double Stuf", "quantity": "1 row"},
+          {"name": "Whole milk", "quantity": "2 cups"}
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2025-01-05",
+    "meals": [
+      {
+        "type": "Breakfast",
+        "time": "8:00 AM",
+        "items": [
+          {"name": "Starbucks Venti Caramel Frappuccino", "quantity": "1 drink"},
+          {"name": "Starbucks Chocolate Croissant", "quantity": "1 piece"}
+        ]
+      },
+      {
+        "type": "Lunch",
+        "time": "12:00 PM",
+        "items": [
+          {"name": "Wendy's Baconator", "quantity": "1 sandwich"},
+          {"name": "Wendy's Large Fries", "quantity": "1 order"},
+          {"name": "Sprite", "quantity": "30 fl oz"}
+        ]
+      },
+      {
+        "type": "Dinner",
+        "time": "6:30 PM",
+        "items": [
+          {"name": "Homemade spaghetti", "quantity": "3 cups"},
+          {"name": "Garlic bread", "quantity": "4 pieces"},
+          {"name": "Caesar salad", "quantity": "2 cups"},
+          {"name": "Parmesan cheese", "quantity": "4 tbsp"}
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2025-01-06",
+    "meals": [
+      {
+        "type": "Breakfast",
+        "time": "7:45 AM",
+        "items": [
+          {"name": "Whole wheat toast", "quantity": "2 slices"},
+          {"name": "Peanut butter", "quantity": "3 tbsp"},
+          {"name": "Banana", "quantity": "1 medium"},
+          {"name": "Orange juice", "quantity": "16 fl oz"}
+        ]
+      },
+      {
+        "type": "Lunch",
+        "time": "1:00 PM",
+        "items": [
+          {"name": "Taco Bell Crunchwrap Supreme", "quantity": "1 item"},
+          {"name": "Taco Bell Nachos BellGrande", "quantity": "1 order"},
+          {"name": "Baja Blast Mountain Dew", "quantity": "32 fl oz"}
+        ]
+      },
+      {
+        "type": "Snack",
+        "time": "4:30 PM",
+        "items": [
+          {"name": "Snickers Bar", "quantity": "2 bars"},
+          {"name": "Red Bull", "quantity": "16 fl oz"}
+        ]
+      },
+      {
+        "type": "Dinner",
+        "time": "8:00 PM",
+        "items": [
+          {"name": "Frozen Stouffer's Lasagna", "quantity": "half pan"},
+          {"name": "Garlic bread", "quantity": "3 pieces"}
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2025-01-07",
+    "meals": [
+      {
+        "type": "Breakfast",
+        "time": "9:30 AM",
+        "items": [
+          {"name": "Pop-Tarts Frosted Strawberry", "quantity": "2 pastries"},
+          {"name": "Whole milk", "quantity": "16 fl oz"}
+        ]
+      },
+      {
+        "type": "Lunch",
+        "time": "2:00 PM",
+        "items": [
+          {"name": "KFC Original Recipe Chicken", "quantity": "4 pieces"},
+          {"name": "KFC Mashed Potatoes with Gravy", "quantity": "1 large"},
+          {"name": "KFC Coleslaw", "quantity": "1 large"},
+          {"name": "Dr Pepper", "quantity": "32 fl oz"}
+        ]
+      },
+      {
+        "type": "Dinner",
+        "time": "7:30 PM",
+        "items": [
+          {"name": "Domino's Large Pepperoni Pizza", "quantity": "6 slices"},
+          {"name": "Domino's Garlic Bread Twists", "quantity": "1 order"},
+          {"name": "Ranch dressing", "quantity": "4 tbsp"}
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2025-01-08",
+    "meals": [
+      {
+        "type": "Breakfast",
+        "time": "10:30 AM",
+        "items": [
+          {"name": "IHOP Full Stack Pancakes", "quantity": "1 order"},
+          {"name": "Butter", "quantity": "4 tbsp"},
+          {"name": "Maple syrup", "quantity": "1/2 cup"},
+          {"name": "Bacon", "quantity": "4 strips"},
+          {"name": "Coffee with cream and sugar", "quantity": "3 cups"}
+        ]
+      },
+      {
+        "type": "Lunch",
+        "time": "3:00 PM",
+        "items": [
+          {"name": "Chipotle Burrito", "quantity": "1 burrito"},
+          {"name": "Tortilla chips", "quantity": "1 bag"},
+          {"name": "Guacamole", "quantity": "1 side"},
+          {"name": "Coca-Cola", "quantity": "32 fl oz"}
+        ]
+      },
+      {
+        "type": "Snack",
+        "time": "6:00 PM",
+        "items": [
+          {"name": "Ben & Jerry's Half Baked Ice Cream", "quantity": "1 pint"}
+        ]
+      },
+      {
+        "type": "Dinner",
+        "time": "9:00 PM",
+        "items": [
+          {"name": "Buffalo Wild Wings Traditional Wings", "quantity": "15 pieces"},
+          {"name": "French fries", "quantity": "1 large basket"},
+          {"name": "Blue cheese dressing", "quantity": "4 oz"},
+          {"name": "Beer", "quantity": "3 pints"}
+        ]
+      }
+    ]
+  },
+  {
+    "date": "2025-01-09",
+    "meals": [
+      {
+        "type": "Breakfast",
+        "time": "11:00 AM",
+        "items": [
+          {"name": "McDonald's Sausage, Egg & Cheese McGriddle", "quantity": "2 sandwiches"},
+          {"name": "Hash browns", "quantity": "2 pieces"},
+          {"name": "Orange juice", "quantity": "large"}
+        ]
+      },
+      {
+        "type": "Lunch",
+        "time": "3:30 PM",
+        "items": [
+          {"name": "Frozen Marie Callender's Chicken Pot Pie", "quantity": "1 pie"},
+          {"name": "Pepsi", "quantity": "20 fl oz"}
+        ]
+      },
+      {
+        "type": "Snack",
+        "time": "5:00 PM",
+        "items": [
+          {"name": "Cheetos Flamin' Hot", "quantity": "1 family size bag"}
+        ]
+      },
+      {
+        "type": "Dinner",
+        "time": "8:00 PM",
+        "items": [
+          {"name": "Homemade chicken stir-fry", "quantity": "3 cups"},
+          {"name": "White rice", "quantity": "2 cups"},
+          {"name": "Egg rolls", "quantity": "3 pieces"},
+          {"name": "Sweet and sour sauce", "quantity": "4 tbsp"}
+        ]
+      },
+      {
+        "type": "Late Night Snack",
+        "time": "11:30 PM",
+        "items": [
+          {"name": "Häagen-Dazs Vanilla Ice Cream", "quantity": "1 pint"},
+          {"name": "Hershey's Chocolate Syrup", "quantity": "4 tbsp"}
+        ]
+      }
+    ]
+  }
+]

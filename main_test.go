@@ -5,7 +5,10 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
+
+	"github.com/sashabaranov/go-openai"
 )
 
 func TestReadFoodLog(t *testing.T) {
@@ -36,9 +39,14 @@ func TestReadFoodLog(t *testing.T) {
 func TestSendRequest(t *testing.T) {
 	// Create a mock server
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Verify request method and path
+		if r.Method != http.MethodPost {
+			t.Errorf("Expected POST request, got %s", r.Method)
+		}
+
 		// Check if the request headers are set correctly
-		if r.Header.Get("Content-Type") != "application/json" {
-			t.Errorf("Expected Content-Type header to be application/json")
+		if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
+			t.Errorf("Expected Content-Type header to contain application/json, got %s", r.Header.Get("Content-Type"))
 		}
 		if r.Header.Get("Authorization") != "Bearer test_api_key" {
 			t.Errorf("Expected Authorization header to be Bearer test_api_key")
@@ -50,33 +58,50 @@ func TestSendRequest(t *testing.T) {
 			t.Errorf("Expected X-Title header to be IngredientIQ")
 		}
 
+		// Decode and verify request body
+		var reqBody openai.ChatCompletionRequest
+		if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+			t.Errorf("Failed to decode request body: %v", err)
+		}
+
 		// Send a mock response
-		response := APIResponse{
-			Choices: []struct {
-				Message Message `json:"message"`
-			}{
+		response := openai.ChatCompletionResponse{
+			Choices: []openai.ChatCompletionChoice{
 				{
-					Message: Message{
-						Role:    "assistant",
+					Message: openai.ChatCompletionMessage{
+						Role:    openai.ChatMessageRoleAssistant,
 						Content: "This is a test response",
 					},
 				},
 			},
 		}
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(response)
 	}))
 	defer server.Close()
 
-	// Override the apiURL for testing
-	originalAPIURL := apiURL
-	apiURL = server.URL
-	defer func() { apiURL = originalAPIURL }()
+	// Create a test configuration
+	config := openai.DefaultConfig("test_api_key")
+	config.BaseURL = server.URL
 
-	messages := []Message{
-		{Role: "user", Content: "Test message"},
+	// Create custom transport with proper initialization
+	transport := &customTransport{
+		base: http.DefaultTransport,
+	}
+	config.HTTPClient = &http.Client{
+		Transport: transport,
 	}
 
-	response, err := sendRequest("test_api_key", messages)
+	client := openai.NewClientWithConfig(config)
+
+	messages := []openai.ChatCompletionMessage{
+		{
+			Role:    openai.ChatMessageRoleUser,
+			Content: "Test message",
+		},
+	}
+
+	response, err := sendRequest(client, messages)
 	if err != nil {
 		t.Fatalf("sendRequest failed: %v", err)
 	}

@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"encoding/json"
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,30 +11,13 @@ import (
 	"strings"
 
 	"github.com/joho/godotenv"
+	openai "github.com/sashabaranov/go-openai"
 )
 
 const (
-	defaultAPIURL = "https://openrouter.ai/api/v1/chat/completions"
-	model         = "openai/gpt-3.5-turbo"
+	customBaseURL = "https://openrouter.ai/api/v1"
+	modelName     = "deepseek/deepseek-r1-distill-llama-70b"
 )
-
-type Message struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
-}
-
-type APIRequest struct {
-	Model    string    `json:"model"`
-	Messages []Message `json:"messages"`
-}
-
-type APIResponse struct {
-	Choices []struct {
-		Message Message `json:"message"`
-	} `json:"choices"`
-}
-
-var apiURL = defaultAPIURL
 
 func main() {
 	err := godotenv.Load()
@@ -47,17 +30,38 @@ func main() {
 		log.Fatal("API key not found in .env file")
 	}
 
-	foodLog, err := readFoodLog("food_log.json")
+	// Create custom configuration
+	config := openai.DefaultConfig(apiKey)
+	config.BaseURL = customBaseURL
+
+	// Create custom transport with proper initialization
+	transport := &customTransport{
+		base: http.DefaultTransport,
+	}
+	config.HTTPClient = &http.Client{
+		Transport: transport,
+	}
+
+	// Initialize the client with custom configuration
+	client := openai.NewClientWithConfig(config)
+
+	foodLog, err := readFoodLog("sample_food_log.json")
 	if err != nil {
 		log.Fatalf("Error reading food log: %v", err)
 	}
 
-	messages := []Message{
-		{Role: "system", Content: "You are a nutritionist analyzing a food log. Provide insights and recommendations based on the log."},
-		{Role: "user", Content: fmt.Sprintf("Analyze this food log and provide insights: %s", foodLog)},
+	messages := []openai.ChatCompletionMessage{
+		{
+			Role:    openai.ChatMessageRoleSystem,
+			Content: "You are a prevanative health expert analyzing an included daily food log. Identify potentially harmful processed foods and predict long-term health impacts. List the unhealthiest processed foods in the log and provide insights and recommendations to improve long term health outcomes based on findings and analysis.",
+		},
+		{
+			Role:    openai.ChatMessageRoleUser,
+			Content: fmt.Sprintf("Analyze this food log and provide insights: %s", foodLog),
+		},
 	}
 
-	response, err := sendRequest(apiKey, messages)
+	response, err := sendRequest(client, messages)
 	if err != nil {
 		log.Fatalf("Error sending request to API: %v", err)
 	}
@@ -76,8 +80,12 @@ func main() {
 			break
 		}
 
-		messages = append(messages, Message{Role: "user", Content: input})
-		response, err := sendRequest(apiKey, messages)
+		messages = append(messages, openai.ChatCompletionMessage{
+			Role:    openai.ChatMessageRoleUser,
+			Content: input,
+		})
+
+		response, err := sendRequest(client, messages)
 		if err != nil {
 			log.Printf("Error sending request to API: %v", err)
 			continue
@@ -85,7 +93,10 @@ func main() {
 
 		fmt.Println("AI Response:")
 		fmt.Println(response)
-		messages = append(messages, Message{Role: "assistant", Content: response})
+		messages = append(messages, openai.ChatCompletionMessage{
+			Role:    openai.ChatMessageRoleAssistant,
+			Content: response,
+		})
 	}
 }
 
@@ -97,50 +108,43 @@ func readFoodLog(filename string) (string, error) {
 	return string(content), nil
 }
 
-func sendRequest(apiKey string, messages []Message) (string, error) {
-	requestBody, err := json.Marshal(APIRequest{
-		Model:    model,
-		Messages: messages,
-	})
+func sendRequest(client *openai.Client, messages []openai.ChatCompletionMessage) (string, error) {
+	resp, err := client.CreateChatCompletion(
+		context.Background(),
+		openai.ChatCompletionRequest{
+			Model:    modelName,
+			Messages: messages,
+		},
+	)
 	if err != nil {
 		return "", err
 	}
 
-	req, err := http.NewRequest("POST", apiURL, strings.NewReader(string(requestBody)))
-	if err != nil {
-		return "", err
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-	req.Header.Set("HTTP-Referer", "https://github.com/alexpolus/IngredientIQ")
-	req.Header.Set("X-Title", "IngredientIQ")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("API request failed with status code %d: %s", resp.StatusCode, string(body))
-	}
-
-	var apiResponse APIResponse
-	err = json.Unmarshal(body, &apiResponse)
-	if err != nil {
-		return "", err
-	}
-
-	if len(apiResponse.Choices) == 0 {
+	if len(resp.Choices) == 0 {
 		return "", fmt.Errorf("no response from API")
 	}
 
-	return apiResponse.Choices[0].Message.Content, nil
+	return resp.Choices[0].Message.Content, nil
+}
+
+// customTransport adds required headers for OpenRouter
+type customTransport struct {
+	base http.RoundTripper
+}
+
+func (t *customTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	if t.base == nil {
+		t.base = http.DefaultTransport
+	}
+
+	// Ensure Content-Type is set
+	if req.Header.Get("Content-Type") == "" {
+		req.Header.Set("Content-Type", "application/json")
+	}
+
+	// Add OpenRouter specific headers
+	req.Header.Set("HTTP-Referer", "https://github.com/alexpolus/IngredientIQ")
+	req.Header.Set("X-Title", "IngredientIQ")
+
+	return t.base.RoundTrip(req)
 }
