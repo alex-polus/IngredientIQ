@@ -1,27 +1,30 @@
 # IngredientIQ
-🥗 AI-powered food analysis for better health decisions 🧬
+<img width="574" height="252" alt="image" src="https://github.com/user-attachments/assets/8069c677-d702-4ab0-a4cd-bb41baacf7cf" />
+
 ## 🚀 Overview
 
 IngredientIQ is a preventative health AI tool that helps you understand what's really in your food. By analyzing your nutrition data, we identify potentially harmful processed ingredients and predict their long-term health impacts.
 ### 🎯 Key Features
 
-- **Smart Food Analysis:** Upload your nutrition data from apps like MyFitnessPal or Cronometer
+- **Smart Food Analysis:** Upload your food nutrition data
 - **Ingredient Detection:** AI-powered identification of ultra-processed ingredients
 - **Health Impact Prediction:** Learn about potential long-term health effects
-- **Personalized Insights:** Get recommendations based on your health profile
 - **Real-time Chat:** Interact with our AI to ask questions about your diet
 
 ### 🧪 How It Works
-1. **Upload Your Data:** Export your food log to .json from MyFitnessPal or Cronometer 
-2. **AI Analysis:** Our model identifies ultra-processed ingredients
+1. **Upload Your Data:** Export your food log to .json from a food tracker (e.g. MyFitnessPal, Cronometer) or manually create one
+2. **AI Analysis:** Gemini 2.5 Pro model identifies ultra-processed ingredients
 3. **Risk Assessment:** Get a detailed breakdown of potential health impacts
-4. **Recommendations:** Receive personalized alternatives and suggestions
+4. **Recommendations:** Receive personalized alternatives and suggestions from Gemini
 
 ## 📦 Installation
 
 ### Prerequisites
-- Go 1.22.4 or later
-- OpenAI API key or compatible API (like OpenRouter)
+- Go 1.20 or later
+- OpenAI-compatible API endpoint (like OpenRouter, VertexAI etc.)
+   - Gemini 2.5 Pro available on endpoint
+  
+*Note: If you don't have access to Gemini, the model can be edited [here](https://github.com/alex-polus/IngredientIQ/blob/main/main.go#L20)*
 
 ### Setup
 1. **Clone the repository:**
@@ -44,6 +47,19 @@ IngredientIQ is a preventative health AI tool that helps you understand what's r
    
    *Note: If you don't set these, the program will prompt you to enter them on first run.*
 
+## 🍗 Preparing Your Food Log
+To use your food diary with this project, export it as a JSON file using one of the following methods:
+
+- **MyFitnessPal or Cronometer**:
+  1.   Export your food log as a `.csv` file from the app.
+  2. Simplify the `.csv` by keeping only the `food names`, `dates`, and `quantities` columns, and remove all other fields.
+  3. Convert the `.csv` to JSON using an AI tool (e.g., ChatGPT, Gemini, or Grok). Aim for a structure similar to `sample_food_log.json` (exact matching is not required).
+  4. *(Optional)* Use this [open-source tool](https://github.com/jrmycanady/cronometer-export) to export Cronometer logs directly to JSON.
+
+- **Manual**:
+  Create a JSON file manually, following the structure provided in `sample_food_log.json`.
+
+
 ## 🚀 Usage
 
 ### Running the Application
@@ -53,7 +69,7 @@ go run main.go
 
 ### First Time Setup
 1. **API Configuration:** If you haven't set environment variables, you'll be prompted to enter:
-   - Your OpenAI API key
+   - Your OpenAI-compatible API key
    - Your API base URL (e.g., for OpenRouter: `https://openrouter.ai/api/v1`)
 
 2. **Food Log File:** Enter the path to your JSON food log file:
@@ -67,26 +83,6 @@ go run main.go
 - **Interactive Chat:** After the initial analysis, ask follow-up questions about your diet
 - **Exit:** Type `quit` to exit the program
 
-### Preparing Your Food Log
-Export your food diary as JSON from:
-- **MyFitnessPal:** Use third-party export tools
-- **Cronometer:** Export data in JSON format
-- **Manual:** Create a JSON file following the structure in `sample_food_log.json`
-
 ### Example Session
-```
-📁 Enter food log file path (or press Enter for default: sample_food_log.json): 
-📊 Loading food log data...
-✅ Food log loaded successfully!
-🤖 Analyzing your food log with AI...
 
-[AI analysis results appear here]
-
-💬 Enter your message (or 'quit' to exit): What are the healthiest meals in my log?
-🤖 Processing your question...
-
-[AI response with specific recommendations]
-
-💬 Enter your message (or 'quit' to exit): quit
-👋 Thank you for using IngredientIQ! Stay healthy! 🌟
-```
+<img width="700" height="594" alt="Screenshot 2025-07-11 at 12 46 13 PM" src="https://github.com/user-attachments/assets/d4293d7c-bbb5-44f5-8c13-065f3bc5e251" />
