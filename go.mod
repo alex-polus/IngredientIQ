@@ -1,6 +1,8 @@
 module ingredientiq
 
-go 1.22.4
+go 1.23.0
+
+toolchain go1.23.11
 
 require (
 	github.com/joho/godotenv v1.5.1
@@ -26,5 +28,6 @@ require (
 	github.com/rivo/uniseg v0.1.0 // indirect
 	golang.org/x/image v0.0.0-20191206065243-da761ea9ff43 // indirect
 	golang.org/x/net v0.0.0-20190813141303-74dc4d7220e7 // indirect
-	golang.org/x/sys v0.25.0 // indirect
+	golang.org/x/sys v0.34.0 // indirect
+	golang.org/x/term v0.33.0 // indirect
 )

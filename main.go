@@ -8,16 +8,18 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"syscall"
 
 	markdown "github.com/MichaelMure/go-term-markdown"
 	"github.com/fatih/color"
 	"github.com/joho/godotenv"
 	openai "github.com/sashabaranov/go-openai"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/term"
 )
 
 const (
-	modelName = "google/gemini-2.5-pro"
+	modelName  = "google/gemini-2.5-pro"
 	configFile = ".ingredientiq_config"
 )
 
@@ -25,6 +27,28 @@ const (
 func renderMarkdown(text string) string {
 	// Render markdown with terminal width of 80 characters and indent of 2
 	return string(markdown.Render(text, 80, 2))
+}
+
+// readSecureInput reads input from terminal without echoing characters (for passwords/API keys)
+// Falls back to regular input if not in an interactive terminal
+func readSecureInput() (string, error) {
+	// Check if stdin is a terminal
+	if term.IsTerminal(int(syscall.Stdin)) {
+		bytePassword, err := term.ReadPassword(int(syscall.Stdin))
+		if err != nil {
+			return "", err
+		}
+		fmt.Println() // Add newline after password input
+		return strings.TrimSpace(string(bytePassword)), nil
+	} else {
+		// Fallback to regular input for non-interactive terminals (e.g., piped input)
+		reader := bufio.NewReader(os.Stdin)
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			return "", err
+		}
+		return strings.TrimSpace(input), nil
+	}
 }
 
 // loadLastFilePath loads the last used file path from config file
@@ -44,16 +68,16 @@ func saveLastFilePath(filePath string) error {
 // promptForFilePath prompts user for food log file path with default option
 func promptForFilePath(reader *bufio.Reader) (string, error) {
 	lastPath := loadLastFilePath()
-	
+
 	if lastPath != "" {
 		color.New(color.FgCyan, color.Bold).Printf("📁 Enter food log file path (or press Enter for default: %s): ", lastPath)
 	} else {
 		color.New(color.FgCyan, color.Bold).Print("📁 Enter food log file path: ")
 	}
-	
+
 	input, _ := reader.ReadString('\n')
 	input = strings.TrimSpace(input)
-	
+
 	// If user pressed Enter without typing anything, use last path
 	if input == "" && lastPath != "" {
 		input = lastPath
@@ -61,18 +85,18 @@ func promptForFilePath(reader *bufio.Reader) (string, error) {
 	} else if input == "" {
 		return "", fmt.Errorf("no file path provided")
 	}
-	
+
 	// Check if file exists
 	if _, err := os.Stat(input); os.IsNotExist(err) {
 		return "", fmt.Errorf("file does not exist: %s", input)
 	}
-	
+
 	// Save the file path for next time
 	err := saveLastFilePath(input)
 	if err != nil {
 		color.New(color.FgYellow, color.Bold).Printf("⚠️  Warning: Could not save file path for next time: %v\n", err)
 	}
-	
+
 	return input, nil
 }
 
@@ -105,7 +129,7 @@ func displayLogo() {
 	magenta.Print("                              ╚═╝ ╚══▀▀═╝ ")
 	red.Println("")
 	fmt.Println()
-	cyan.Println("                    🥗 AI-Powered Food Analysis for Better Health 🧬")
+	cyan.Println("              🥗 AI-Powered Nutrition Analysis for Better Health 🧬")
 	fmt.Println()
 	color.New(color.FgWhite, color.Bold).Println("═══════════════════════════════════════════════════════════════════════════════")
 	fmt.Println()
@@ -241,9 +265,12 @@ func main() {
 func setApiKeyAndURL(reader bufio.Reader) (apiKey string, baseURL string, err error) {
 	apiKey = os.Getenv("INGRDNT_IQ_OPENAI_API_KEY")
 	if apiKey == "" {
-		color.New(color.FgYellow, color.Bold).Print("🔑 Enter your API key: ")
-		apiKey, _ = reader.ReadString('\n')
-		apiKey = strings.TrimSpace(apiKey)
+		color.New(color.FgYellow, color.Bold).Print("🔑 Enter your API key (input hidden): ")
+		apiKey, err = readSecureInput()
+		if err != nil {
+			color.New(color.FgRed, color.Bold).Printf("❌ Error reading API key: %v\n", err)
+			return "", "", err
+		}
 
 		err := os.Setenv("INGRDNT_IQ_OPENAI_API_KEY", apiKey)
 		if err != nil {

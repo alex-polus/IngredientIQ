@@ -1,5 +1,7 @@
 # IngredientIQ
-<img width="574" height="252" alt="image" src="https://github.com/user-attachments/assets/8069c677-d702-4ab0-a4cd-bb41baacf7cf" />
+<p align="center">
+   <img width="656" height="271" alt="image" src="https://github.com/user-attachments/assets/bde31b2d-37d2-46b2-a9d9-991265c0dbdd" />
+</p>
 
 ## 🚀 Overview
 
@@ -20,7 +22,7 @@ IngredientIQ is a preventative health AI tool that helps you understand what's r
 ## 📦 Installation
 
 ### Prerequisites
-- Go 1.20 or later
+- Go 1.23 or later
 - OpenAI-compatible API endpoint (like OpenRouter, VertexAI etc.)
    - Gemini 2.5 Pro available on endpoint
   
@@ -85,4 +87,5 @@ go run main.go
 
 ### Example Session
 
-<img width="700" height="594" alt="Screenshot 2025-07-11 at 12 46 13 PM" src="https://github.com/user-attachments/assets/d4293d7c-bbb5-44f5-8c13-065f3bc5e251" />
+<img width="683" height="685" alt="image" src="https://github.com/user-attachments/assets/17369d3a-3157-4758-91b9-2af0d749bf17" />
+
