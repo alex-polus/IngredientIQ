@@ -18,12 +18,62 @@ import (
 
 const (
 	modelName = "google/gemini-2.5-pro"
+	configFile = ".ingredientiq_config"
 )
 
 // renderMarkdown renders markdown text with proper terminal formatting
 func renderMarkdown(text string) string {
 	// Render markdown with terminal width of 80 characters and indent of 2
 	return string(markdown.Render(text, 80, 2))
+}
+
+// loadLastFilePath loads the last used file path from config file
+func loadLastFilePath() string {
+	content, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		return "" // Return empty string if config file doesn't exist
+	}
+	return strings.TrimSpace(string(content))
+}
+
+// saveLastFilePath saves the file path to config file
+func saveLastFilePath(filePath string) error {
+	return ioutil.WriteFile(configFile, []byte(filePath), 0644)
+}
+
+// promptForFilePath prompts user for food log file path with default option
+func promptForFilePath(reader *bufio.Reader) (string, error) {
+	lastPath := loadLastFilePath()
+	
+	if lastPath != "" {
+		color.New(color.FgCyan, color.Bold).Printf("📁 Enter food log file path (or press Enter for default: %s): ", lastPath)
+	} else {
+		color.New(color.FgCyan, color.Bold).Print("📁 Enter food log file path: ")
+	}
+	
+	input, _ := reader.ReadString('\n')
+	input = strings.TrimSpace(input)
+	
+	// If user pressed Enter without typing anything, use last path
+	if input == "" && lastPath != "" {
+		input = lastPath
+		color.New(color.FgGreen, color.Bold).Printf("✅ Using default file: %s\n", lastPath)
+	} else if input == "" {
+		return "", fmt.Errorf("no file path provided")
+	}
+	
+	// Check if file exists
+	if _, err := os.Stat(input); os.IsNotExist(err) {
+		return "", fmt.Errorf("file does not exist: %s", input)
+	}
+	
+	// Save the file path for next time
+	err := saveLastFilePath(input)
+	if err != nil {
+		color.New(color.FgYellow, color.Bold).Printf("⚠️  Warning: Could not save file path for next time: %v\n", err)
+	}
+	
+	return input, nil
 }
 
 // displayLogo shows a colorful ASCII logo for IngredientIQ
@@ -93,9 +143,17 @@ func main() {
 	// Initialize the client with custom configuration
 	client := openai.NewClientWithConfig(config)
 
+	// Prompt for food log file path
+	filePath, err := promptForFilePath(reader)
+	if err != nil {
+		color.New(color.FgRed, color.Bold).Printf("❌ Error getting file path: %v\n", err)
+		log.Fatalf("Error getting file path: %v", err)
+	}
+	fmt.Println()
+
 	// Read food log with colored status message
 	color.New(color.FgCyan, color.Bold).Println("📊 Loading food log data...")
-	foodLog, err := readFoodLog("sample_food_log.json")
+	foodLog, err := readFoodLog(filePath)
 	if err != nil {
 		color.New(color.FgRed, color.Bold).Printf("❌ Error reading food log: %v\n", err)
 		log.Fatalf("Error reading food log: %v", err)
