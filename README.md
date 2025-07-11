@@ -12,8 +12,8 @@ IngredientIQ is a preventative health AI tool that helps you understand what's r
 - **Real-time Chat:** Interact with our AI to ask questions about your diet
 
 ### 🧪 How It Works
-
-1. **Upload Your Data:** Export your food log from MyFitnessPal or Cronometer
+run `go run main.go`
+1. **Upload Your Data:** Export your food log to .json from MyFitnessPal or Cronometer 
 2. **AI Analysis:** Our model identifies ultra-processed ingredients
 3. **Risk Assessment:** Get a detailed breakdown of potential health impacts
 4. **Recommendations:** Receive personalized alternatives and suggestions
