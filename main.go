@@ -182,13 +182,18 @@ func main() {
 		color.New(color.FgRed, color.Bold).Printf("❌ Error reading food log: %v\n", err)
 		log.Fatalf("Error reading food log: %v", err)
 	}
+
+	systemPrompt, err := readFoodLog("system_prompt.md")
+	if err != nil {
+		log.Fatalf("Error reading system prompt: %v", err)
+	}
 	color.New(color.FgGreen, color.Bold).Println("✅ Food log loaded successfully!")
 	fmt.Println()
 
 	messages := []openai.ChatCompletionMessage{
 		{
 			Role:    openai.ChatMessageRoleSystem,
-			Content: "You are a prevanative health expert analyzing an included daily food log. Identify potentially harmful processed foods and predict long-term health impacts. List the unhealthiest processed foods in the log and provide insights and recommendations to improve long term health outcomes based on findings and analysis.",
+			Content: fmt.Sprintf("%s", systemPrompt),
 		},
 		{
 			Role:    openai.ChatMessageRoleUser,
